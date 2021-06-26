@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import './ExpenseForm.css';
 
 const ExpenseForm = (props) => {
@@ -7,6 +7,15 @@ const ExpenseForm = (props) => {
         amount: '',
         date: ''
     });
+
+    const [showForm, setShowForm] = useState(false);
+
+    if (!showForm)
+        return (
+            <div className="new-expense__actions" style={{textAlign: 'center'}}>
+                <button type="button" onClick={() => setShowForm(true)}>Add New Expense</button>
+            </div>
+        );
 
     const inputChangeHandler = (ev) => {
         setExpense((prevState) => {
@@ -20,11 +29,13 @@ const ExpenseForm = (props) => {
 
         const expenseData = {
             ...expense,
+            amount: +expense.amount,
             date: new Date(expense.date)
         }
 
-        console.log(expenseData);
         props.onSave(expenseData);
+
+        setShowForm(false);
 
         setExpense({
             title: '',
@@ -33,25 +44,27 @@ const ExpenseForm = (props) => {
         })
     }
 
-    console.log(expense);
-
     return (
-        <form onSubmit={submitHandler   }>
+        <form onSubmit={submitHandler}>
             <div className="new-expense__controls">
                 <div className="new-expense__control">
                     <label>Title</label>
-                    <input type="text" value={expense.title} name="title" onChange={inputChangeHandler} required="required"/>
+                    <input type="text" value={expense.title} name="title" onChange={inputChangeHandler}
+                           required="required"/>
                 </div>
                 <div className="new-expense__control">
                     <label>Amount</label>
-                    <input type="number" value={expense.amount} name="amount" min="0.01" step="0.01" onChange={inputChangeHandler} required="required"/>
+                    <input type="number" value={expense.amount} name="amount" min="0.01" step="0.01"
+                           onChange={inputChangeHandler} required="required"/>
                 </div>
                 <div className="new-expense__control">
                     <label>Date</label>
-                    <input type="date" value={expense.date} name="date" min="2019-01-01" max="2022-12-31" onChange={inputChangeHandler} required="required"/>
+                    <input type="date" value={expense.date} name="date" min="2019-01-01" max="2022-12-31"
+                           onChange={inputChangeHandler} required="required"/>
                 </div>
             </div>
             <div className="new-expense__actions">
+                <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
                 <button type="submit">Add expense</button>
             </div>
         </form>
